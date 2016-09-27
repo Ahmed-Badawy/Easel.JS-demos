@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	#cnvs{
+		background-color: #eee;
+	}
+	</style>	
+</head>
+<body>
+
+<canvas id='cnvs' width='1000' height=500></canvas>
+
+
+<script type="text/javascript" src='../libs/easeljs-NEXT.min.js'></script>
+<script type="text/javascript">
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+function generate_rand(begin,end){
+	let num = Math.floor(Math.random() * end) + begin;
+	if(num%2 == 0) return num;
+	return -1 * num;
+}
+
+
+var data = [
+	{"title":"here some tooltip 01","bounds":[ [0,0],[60,0],[60,60],[0,60] ]},
+	{"title":"here some tooltip 11","bounds":[[4,4],[64,4],[64,64],[4,64]]},
+	{"title":"here some tooltip 21","bounds":[[8.138342136442414,0.3387041585129751],[67.69111123492173,7.650864762821826],[60.37895063061289,67.20363386130114],[0.8261815321335675,59.8914732569923]]},
+	{"title":"here some tooltip 31","bounds":[[12.138342136442414,4.338704158512975],[71.69111123492173,11.650864762821826],[64.37895063061289,71.20363386130114],[4.8261815321335675,63.8914732569923]]},
+	{"title":"here some tooltip 41","bounds":[[16.692037418357483,1.2090360999787464],[74.90978099491727,15.724349835958812],[60.39446725893721,73.9420934125186],[2.176723682377421,59.42677967653854]]},
+]
+
+
+	function init(){
+
+		var canvas = document.getElementById('cnvs'),
+		centerX = canvas.width/2,
+		centerY = canvas.height/2,
+		size = 100;
+
+		createjs.Ticker.setFPS(10);
+
+		for(let i=0;i<data.length;i++){
+			$this_value = data[i];
+			$this_value.start_points = [ $this_value.bounds[0][0], $this_value.bounds[0][1] ];
+			$this_value.sizes = [ 	
+									$this_value.bounds[1][0] - $this_value.bounds[0][0] ,
+								 	$this_value.bounds[2][1] - $this_value.bounds[1][1]
+								];
+
+			$this_value.g = new createjs.Graphics();
+			$this_value.shape = new createjs.Shape($this_value.g.beginFill(getRandomColor()).drawRect( 
+																				$this_value.start_points[0],
+																				$this_value.start_points[1],
+																				$this_value.sizes[0],
+																				$this_value.sizes[1]
+																		));
+			$this_value.shape.x = centerX;
+			$this_value.shape.y = centerY;
+			$this_value.shape.regX = size/2;
+			$this_value.shape.regY = size/2;
+			$this_value.shape.rotation = 30;
+			$this_value.move = true;
+		}
+
+
+
+		var stage = new createjs.Stage(canvas);
+    	stage.enableMouseOver(20); 
+
+		for(let i=0;i<data.length;i++){
+			$this_value = data[i];
+			stage.addChild(data[i].shape);
+			createjs.Ticker.addEventListener("tick",function(){
+				if(!$this_value.move) return;
+				$this_value = data[i];
+				$this_value.shape.x += generate_rand(1,10);
+				$this_value.shape.y += generate_rand(1,10);
+				$this_value.shape.rotation += generate_rand(1,10);
+				stage.update();					
+			});
+		    $this_value.shape.addEventListener("mouseover", function(e,$this_value) {
+		    	$this_value.move = false;
+		    	console.log($this_value);		    	
+		       // alert($this_value.title);
+		    });
+		}		
+		stage.update();
+
+	}
+	window.onload = init();
+
+</script>
+
+
+
+</body>
+</html>

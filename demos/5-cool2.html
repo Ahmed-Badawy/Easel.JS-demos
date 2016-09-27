@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	#cnvs{
+		background-color: #eee;
+	}
+	</style>	
+</head>
+<body>
+
+<canvas id='cnvs' width='600' height=500></canvas>
+
+
+<script type="text/javascript" src='../libs/easeljs-NEXT.min.js'></script>
+<script type="text/javascript">
+	function init(){
+		var canvas = document.getElementById('cnvs'),
+		graphics = new createjs.Graphics(),
+		centerX = canvas.width/2,
+		centerY = canvas.height/2,
+		size = 200;
+
+		graphics.beginStroke('rgba(70,70,255, .8)'); //adding color with the alpha .8
+		graphics.setStrokeStyle(10,0,1);
+		graphics.drawRoundRectComplex(50,50,250,250,50,0,50,0);
+
+		var shape = new createjs.Shape(graphics);
+		shape.x = centerX-size/2;
+		shape.y = centerY-size/2;
+		shape.regX = size/2;
+		shape.regY = size/2;
+		shape.rotation = 0;
+
+//-----------------------------------------------------------------------
+// How to Create Texts
+		// var sentence = new createjs.Text();
+		// sentence.text = "Hello World";
+		// sentence.font = "bold 100px Tahoma"
+		// sentence.color = "#222";
+//how to chain these methods
+		var sentence = new createjs.Text("Hello World","bold 30px Tahoma","#555");
+
+		
+		sentence.x = 275
+		sentence.y = 210;
+		sentence.textAlign = "center"
+//-----------------------------------------------------------------------
+
+		createjs.Ticker.setFPS(40);
+		createjs.Ticker.addEventListener("tick",function(){
+			shape.rotation += 1;
+			shape.scaleX += .01;
+			shape.scaleY += .01;
+			stage.update();
+		});
+
+
+		var stage = new createjs.Stage(canvas);
+		stage.addChild(shape);
+		stage.addChild(sentence);
+		stage.update();
+
+
+	}
+	window.onload = init();
+</script>
+
+
+
+</body>
+</html>

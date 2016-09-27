@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	body{
+		padding:0;
+		margin:0;
+	}
+	#cnvs{
+		background-color: #eee;
+		float:left;
+		position:relative;
+	}
+	#tooltip{
+		opacity: 0;
+		float:left;
+		position:absolute;
+		background-color:#222;
+		color:white;
+		padding: 5px;
+		border-radius: 4px;
+		top:0px;
+		left:0px;
+	}
+	.show_tooltip{
+		opacity:.8 !important;
+	}
+	</style>	
+</head>
+<body>
+
+<canvas id='cnvs' width='1000' height=500></canvas>
+<b id='tooltip'>Hello</b>
+
+
+
+
+<script type="text/javascript" src='task1.js'></script>
+<script type="text/javascript" src='easeljs-NEXT.min.js'></script>
+<script type="text/javascript">
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i=0;i<6;i++){ color += letters[Math.floor(Math.random() * 16)] }
+    return color;
+}
+function generate_rand(begin,end,positive){
+	positive = positive || true;
+	var num = Math.floor(Math.random() * end) + begin;
+	return (positive==false && num%2 == 1) ? -1 * num : num;
+}
+
+	function draw_it(centerX,centerY){
+		var $this_value = data[0];
+		$this_value.start_points = [ $this_value.bounds[0][0], $this_value.bounds[0][1] ];
+		$this_value.sizes = [ 	
+								$this_value.bounds[1][0] - $this_value.bounds[0][0] ,
+							 	$this_value.bounds[2][1] - $this_value.bounds[1][1]
+							];
+
+
+		$this_value.g = new createjs.Graphics();
+		$this_value.shape = new createjs.Shape($this_value.g.beginFill(getRandomColor()).drawRect( 
+																			$this_value.start_points[0],
+																			$this_value.start_points[1],
+																			$this_value.sizes[0],
+																			$this_value.sizes[1]
+																	));
+		$this_value.shape.x = $this_value.start_points[0];
+		$this_value.shape.y = $this_value.start_points[1];
+		$this_value.move = true;
+		return $this_value;		
+	}
+
+
+	function init(){
+		var canvas = document.getElementById('cnvs'),
+		$this_value = draw_it();
+	    var tooltip = document.getElementById('tooltip');
+
+
+		createjs.Ticker.setFPS(1);
+		createjs.Ticker.addEventListener("tick",function(){
+			if(!$this_value.move) return;
+			var new_pos = data[generate_rand(0, data.length-1, true)];
+			var start_points = [ new_pos.bounds[0][0], new_pos.bounds[0][1] ];
+
+			$this_value.shape.x = start_points[0];
+			$this_value.shape.y = start_points[1];
+			$this_value.title = new_pos.title;
+			stage.update();					
+		});
+	    $this_value.shape.addEventListener("mouseover", function(e) {
+	    	$this_value.move = false;
+	        tooltip.setAttribute('class','show_tooltip');
+	        tooltip.innerHTML = $this_value.title;
+	        tooltip.style.left = e.target.x + 40 + "px";
+	        tooltip.style.top = e.target.y + 15 + "px";
+	    });
+	    $this_value.shape.addEventListener("mouseout", function(e) {
+	    	$this_value.move = true;
+	        tooltip.setAttribute('class','');
+	    });
+
+
+		var stage = new createjs.Stage(canvas);
+    	stage.enableMouseOver(20); 
+
+		stage.addChild($this_value.shape);
+		stage.update();
+
+	}
+	window.onload = init();
+
+</script>
+
+
+
+</body>
+</html>

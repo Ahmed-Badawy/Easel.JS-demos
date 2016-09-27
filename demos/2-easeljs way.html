@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	#cnvs{
+		background-color: #eee;
+	}
+	</style>	
+</head>
+<body>
+
+<canvas id='cnvs' width='600' height=500></canvas>
+
+
+<script type="text/javascript" src='../libs/easeljs-NEXT.min.js'></script>
+<script type="text/javascript">
+	function init(){
+		var canvas = document.getElementById('cnvs'),
+		graphics = new createjs.Graphics(),
+		centerX = canvas.width/2,
+		centerY = canvas.height/2,
+		size = 200;
+
+		graphics.beginFill('rgb(70,70,255)');
+		graphics.drawRect(0,0,size,size);
+
+		var shape = new createjs.Shape(graphics);
+		shape.x = centerX;
+		shape.y = centerY;
+		shape.regX = size/2;
+		shape.regY = size/2;
+		shape.rotation = 30;
+
+		createjs.Ticker.setFPS(30);
+		createjs.Ticker.addEventListener("tick",function(){
+			shape.rotation += 3;
+			stage.update();
+		});
+
+		var stage = new createjs.Stage(canvas);
+		stage.addChild(shape);
+		stage.update();
+
+		console.log(shape);
+
+	}
+	window.onload = init();
+</script>
+
+
+
+</body>
+</html>

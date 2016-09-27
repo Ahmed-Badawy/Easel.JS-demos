@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	body{
+	    -webkit-font-smoothing: antialiased;
+	    -moz-osx-font-smoothing: grayscale;
+
+	    background: url('stars.jpg') no-repeat center center fixed; 
+	    -webkit-background-size: cover;
+	    -moz-background-size: cover;
+	    -o-background-size: cover;
+	    background-size: cover;    
+	    padding:0;
+	    margin:0;
+	    overflow: hidden;
+	}
+	#cnvs{
+		/*background-color: #333;*/
+		opacity:.3;   
+	}
+	h1{
+		color:white;
+		font-family: Georgia;
+		text-align: center;
+		font-size: 500%;
+		font-weight: bolder;
+	}
+	</style>	
+</head>
+<body>
+
+<h1>Hello World <br><small style='font-size: 50%'>{ Ahmed-Badawy }</small></h1>
+<canvas id='cnvs' width='1000' height=500></canvas>
+
+
+<script type="text/javascript" src='../libs/easeljs-NEXT.min.js'></script>
+<script type="text/javascript">
+
+    var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+        width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+    document.getElementById('cnvs').setAttribute('width',width);
+    document.getElementById('cnvs').setAttribute('height',height);
+
+function get_rand(begin,end,negative){
+	let num = Math.floor(Math.random() * end) + begin;
+	if(negative && num%2!=0) return -1 * num;
+	return num;
+}
+
+	function init(){
+		var canvas = document.getElementById('cnvs'),
+		graphics = new createjs.Graphics(),
+		centerX = canvas.width/2,
+		centerY = canvas.height/2,
+		// size = 20;
+		size = 2;
+
+		var shapes_num = 50;
+		var shapes_array = [];
+		var stage = new createjs.Stage(canvas);
+
+		for(i=0;i<=shapes_num;i++){
+			var elm = {};
+			elm.placementX = get_rand(0,width);
+			elm.placementY = get_rand(0,height);
+			elm.MovementX = get_rand(0,5,true);
+			elm.MovementY = get_rand(0,5,true);
+			elm.shape = new createjs.Shape(graphics.beginFill('#668cff').drawCircle(0,0,size));
+			elm.shape.x = elm.placementX;
+			elm.shape.y = elm.placementY;
+			shapes_array.push(elm);
+			stage.addChild(elm.shape);
+		}
+
+		createjs.Ticker.setFPS(35);
+
+		createjs.Ticker.addEventListener("tick",function(){
+			for(i=0;i<=shapes_num;i++){
+				$this_value = shapes_array[i];
+				$this_value.shape.x += $this_value.MovementX;
+				$this_value.shape.y += $this_value.MovementY;
+				if($this_value.shape.x >= width || $this_value.shape.x <= 0) $this_value.MovementX = -$this_value.MovementX;
+				if($this_value.shape.y >= height || $this_value.shape.x <= 0) $this_value.MovementY = -$this_value.MovementY;
+			};
+			stage.update();
+		})
+
+
+		stage.update();
+
+	}
+	window.onload = init();
+
+</script>
+
+
+
+</body>
+</html>

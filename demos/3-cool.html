@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	#cnvs{
+		background-color: #eee;
+	}
+	</style>	
+</head>
+<body>
+
+<canvas id='cnvs' width='600' height=500></canvas>
+
+
+<script type="text/javascript" src='../libs/easeljs-NEXT.min.js'></script>
+<script type="text/javascript">
+	function init(){
+		var canvas = document.getElementById('cnvs'),
+		graphics1 = new createjs.Graphics(),
+		graphics2 = new createjs.Graphics(),
+		centerX = canvas.width/2,
+		centerY = canvas.height/2,
+		size = 100;
+
+		graphics1.beginFill('rgb(70,70,255)');
+		graphics2.beginFill('rgb(70,70,255)');
+
+		var shape1 = new createjs.Shape(graphics1.drawRect(0,0,size,size));
+		var shape2 = new createjs.Shape(graphics2.drawRect(122,122,size,size));
+
+		shape1.x = centerX;
+		shape2.x = centerX;
+		shape1.y = centerY;
+		shape2.y = centerY;
+		shape1.regX = size/2;
+		shape2.regX = size/2;
+		shape1.regY = size/2;
+		shape2.regY = size/2;
+		shape1.rotation = 30;
+		shape2.rotation = 30;
+
+
+		createjs.Ticker.setFPS(30);
+		createjs.Ticker.addEventListener("tick",function(){
+			shape1.rotation += 3;
+			shape2.rotation += 1;
+			stage.update();
+		});
+
+		var stage = new createjs.Stage(canvas);
+		stage.addChild(shape1);
+		stage.addChild(shape2);
+		stage.update();
+
+		console.log(shape1);
+		console.log(shape2);
+
+    stage.enableMouseOver(20); 
+
+    shape1.addEventListener("mouseover", function() {
+       alert("hello from 1")
+    });
+    shape2.addEventListener("mouseover", function() {
+       alert("hello from 2")
+    });
+
+console.log("hello world");
+
+
+	}
+	window.onload = init();
+</script>
+
+
+
+</body>
+</html>
